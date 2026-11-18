@@ -1,73 +1,49 @@
-name: Publish Package to npm & GitHub Packages
+name: Publish to npm and GitHub Packages
 
 on:
+  push:
+    tags:
+      - 'v*'
   release:
-    types: [published, prereleased]
+    types: [published]
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - run: npm ci
-      - run: npm run build
-
-      - name: Upload dist artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist-bundle
-          path: dist/
-
-  publish-npm:
-    needs: build
+  publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # Required for npm provenance attestation
+      packages: write
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
+      - name: Setup Node.js for npm
+        uses: actions/setup-node@v4
         with:
-          name: dist-bundle
-          path: dist/
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+          node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
-      - run: npm publish --provenance --access public
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build library
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish --registry=https://registry.npmjs.org --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  publish-gpr:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write # Required to push to GitHub Packages
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
+      - name: Configure GitHub Packages registry
+        uses: actions/setup-node@v4
         with:
-          name: dist-bundle
-          path: dist/
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+          node-version: '20'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@micropasts'
 
-      - run: npm publish
+      - name: Publish to GitHub Packages
+        run: npm publish --registry=https://npm.pkg.github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
