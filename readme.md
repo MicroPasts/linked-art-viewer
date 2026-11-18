@@ -7,6 +7,8 @@ Built with D3.js, `jsonld.js`, and bundled Tailwind CSS v4—requiring zero runt
 * **Live Demo:** https://micropasts.github.io/linked-art-viewer/
 * **Repository:** https://github.com/micropasts/linked-art-viewer
 
+### Screenshot of the viewer
+![A screenshot of the linked art viewer in action](./images/screenshot.jpg)
 ---
 
 ## Features
