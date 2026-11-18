@@ -1,0 +1,54 @@
+{
+  "name": "linked-art-viewer",
+  "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "Standalone Linked Art JSON-LD network graph, tree, and N-Quads viewer",
+  "license": "MPL-2.0",
+  "author": {
+    "name": "Daniel Pett",
+    "email": "info@micropasts.org",
+    "url": "https://github.com/micropasts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/micropasts/linked-art-viewer.git"
+  },
+  "homepage": "https://micropasts.github.io/linked-art-viewer/",
+  "bugs": {
+    "url": "https://github.com/micropasts/linked-art-viewer/issues"
+  },
+  "type": "module",
+  "main": "./dist/linked-art-viewer.umd.cjs",
+  "module": "./dist/linked-art-viewer.js",
+  "exports": {
+    ".": {
+      "import": "./dist/linked-art-viewer.js",
+      "require": "./dist/linked-art-viewer.umd.cjs"
+    },
+    "./style.css": "./dist/linked-art-viewer.css"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:docs": "vite build --mode docs"
+  },
+  "dependencies": {
+    "d3": "^7.9.0",
+    "jsonld": "^9.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "tailwindcss": "^4.1.0",
+    "vite": "^6.2.0"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true,
+    "fsevents@2.3.3": true
+  }
+}

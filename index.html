@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linked Art Viewer — Dev Sandbox</title>
+  </head>
+  <body class="bg-slate-100 text-slate-900 p-8 space-y-8 font-sans">
+    <div class="max-w-6xl mx-auto space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 class="text-xl font-bold">Linked Art Network Graph Viewer</h1>
+          <p class="text-sm text-slate-600">Local development sandbox (<code>npm run dev</code>)</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            id="load-sample-var"
+            type="button"
+            class="px-3 py-1.5 text-xs font-semibold rounded-md bg-indigo-600 text-white hover:bg-indigo-500 transition"
+          >
+            Load Sample JS Variable
+          </button>
+
+          <!-- Modal Trigger Mount Point -->
+          <div id="modal-demo"></div>
+        </div>
+      </div>
+
+      <!-- Inline Viewer Mount Point -->
+      <div id="inline-viewer"></div>
+    </div>
+
+    <script type="module">
+      import { LinkedArtViewer } from './src/index.js';
+
+      async function init() {
+        // Fetch the local JSON file into a JS variable
+        const samplePayload = await fetch('./sample-getty.json').then((res) => res.json());
+
+        // 1. Initialize inline viewer from the parsed variable
+        const inlineViewer = new LinkedArtViewer('#inline-viewer', {
+          data: samplePayload,
+          url: samplePayload.id,
+          theme: 'dark',
+          showUrlInput: true,
+          height: '640px',
+        });
+
+        // Reload the JS variable after browsing other URLs
+        document.getElementById('load-sample-var').addEventListener('click', () => {
+          inlineViewer.setData(samplePayload);
+        });
+
+        // 2. Initialize modal trigger button
+        new LinkedArtViewer('#modal-demo', {
+          modal: true,
+          buttonText: 'Open Modal Viewer',
+          data: samplePayload,
+          theme: 'light',
+        });
+      }
+
+      init();
+    </script>
+  </body>
+</html>
